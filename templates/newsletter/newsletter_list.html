@@ -24,7 +24,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for newsletter in newsletter_data %}
+                        {% for newsletter in page_obj %}
                             <tr>
                                 <td>
                                     {% if newsletter.name is None %}
@@ -36,6 +36,25 @@
                                 <td>{{ newsletter.email }}</td>
                             </tr>
                         {% endfor %}
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if page_obj.has_previous %}
+                                    <a href="?page=1">&laquo;اول</a>
+                                    |
+                                    <a href="?page={{ page_obj.previous_page_number }}">قبلی</a>
+                                {% endif %}
+
+                                <span class="current">
+                                    صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}
+                                </span>
+
+                                {% if page_obj.has_next %}
+                                    <a href="?page={{ page_obj.next_page_number }}">بعدی</a>
+                                    |
+                                    <a href="?page={{ page_obj.paginator.num_pages }}">آخر&raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
                         </tbody>
                     </table>
                 </div><!-- /.box-body -->
