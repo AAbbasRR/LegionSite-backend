@@ -6,6 +6,8 @@
     <title>پنل مدیریت | {% block title %} {% endblock %}</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+    <link rel="icon" type="image/png" href="{% static 'login/assets/icons/favicon.ico' %}"/>
     <!-- Bootstrap 3.3.4 -->
     <link rel="stylesheet" href="{% static 'dashboard/bootstrap/css/bootstrap.min.css' %}">
     <!-- Font Awesome -->
@@ -109,24 +111,9 @@
                         <i class="fa fa-dashboard"></i> <span>داشبورد</span>
                     </a>
                 </li>
-                <li class="treeview {% if request.resolver_match.url_name == 'product_list' %}active{% endif %}">
-                    <a href="{% url 'product:product_list' %}">
-                        <i class="fa fa-shopping-cart" aria-hidden="true"></i> <span>محصولات</span>
-                    </a>
-                </li>
-                <li class="treeview {% if request.resolver_match.url_name == 'Sliderlist' %}active{% endif %}">
-                    <a href="{% url 'section:Sliderlist' %}">
-                        <i class="fa fa-sliders"></i> <span>اسلایدر</span>
-                    </a>
-                </li>
-                <li class="treeview {% if request.resolver_match.url_name == 'Sectionlist' %}active{% endif %}">
-                    <a href="{% url 'section:Sectionlist' %}">
-                        <i class="fa fa-desktop"></i> <span>بخش های سایت</span>
-                    </a>
-                </li>
-                <li class="treeview {% if request.resolver_match.url_name == 'Settinglist' %}active{% endif %}">
-                    <a href="{% url 'setting:Settinglist' %}">
-                        <i class="fa fa-map"></i> <span>اطلاعات سایت</span>
+                <li class="treeview {% if request.resolver_match.url_name == 'listcomments' %}active{% endif %}">
+                    <a href="{% url 'comments:listcomments' %}">
+                        <i class="fa fa-comment" aria-hcard-toolsidden="true"></i> <span>نظر ها</span>
                     </a>
                 </li>
                 <li class="treeview {% if request.resolver_match.url_name == 'NewSletterlist' %}active{% endif %}">
@@ -134,11 +121,6 @@
                         <i class="fa fa-users"></i> <span>کاربران خبرنامه</span>
                     </a>
                 </li>
-                {% comment %} <li class="treeview {% if request.resolver_match.url_name == 'IndexSetting' %}active{% endif %}">
-                    <a href="{% url 'account:IndexSetting' 1 %}">
-                        <i class="fa fa-edit"></i> <span>تنظیمات متن اصلی</span>
-                    </a>
-                </li> {% endcomment %}
             </ul>
         </section>
         <!-- /.sidebar -->

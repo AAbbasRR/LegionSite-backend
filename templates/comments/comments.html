@@ -1,58 +1,121 @@
 {% extends 'dashboard/base.html' %}
 {% load static %}
 {% load widget_tweaks %}
-{% block titr %}{% block title %}محصولات{% endblock title %}{% endblock titr %}
-{% block style %}
-    <link rel="stylesheet" href="{% static 'dashboard/plugins/datatables/dataTables.bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'dashboard/dist/css/skins/_all-skins.min.css' %}">
-    <link rel="stylesheet" href="{% static 'dashboard/css/searchbar.css' %}">
-{% endblock style %}
+{% block titr %}{% block title %}نظرات{% endblock title %}{% endblock titr %}
 {% block main %}
     <br>
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
                 <div class="box-header bg-primary">
-                    <h3 class="box-title" style="color: #fefefe">اطلاعات محصولات</h3>
+                    <h3 class="box-title" style="color: #fefefe">نظرات کاربران</h3>
                 </div><!-- /.box-header -->
-                <div class="box-body">
-                    <table id="example1" class="table table-bordered table-striped">
-                        <thead>
-                        <tr>
-                            <th>تیتر</th>
-                            <th>توضیح کوتاه</th>
-                            <th>توضیحات</th>
-                            <th>اندازه بسته بندی</th>
-                            <th>وزن</th>
-                            <th>کیفیت</th>
-                            <th>بسته مادر</th>
-                            <th>نحوه فروش</th>
-                            <th>ویرایش</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for Product in Products_data %}
-                            <tr>
-                                <td>{{ Product.title }}</td>
-                                <td>{{ Product.subtitle }}</td>
-                                <td>{{ Product.content }}</td>
-                                <td>{{ Product.ProductSize }}</td>
-                                <td>{{ Product.ProductWeight }}</td>
-                                <td>{{ Product.ProductQuality }}</td>
-                                <td>{{ Product.MotherPacking }}</td>
-                                <td>{{ Product.get_ProductWhoSell_display }}</td>
-                                <td><a href="{% url 'comments:product_edit' Product.pk %}" class="btn btn-primary">ویرایش</a></td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div><!-- /.box-body -->
-            </div><!-- /.box -->
+                <div class="card card-outline card-tabs card-primary">
+                    <div class="card-header p-0 pt-1 border-bottom-0">
+                        <ul class="nav nav-tabs" id="pills-tab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="unconfirmed-comment-tab" data-toggle="pill" href="#unconfirmed-comment" role="tab" aria-controls="unconfirmed-comment" aria-selected="true">
+                                    تایید نشده
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="confirmed-comment-tab" data-toggle="pill" href="#confirmed-comment" role="tab" aria-controls="confirmed-comment" aria-selected="false">
+                                    تایید شده
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body">
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="unconfirmed-comment" role="tabpanel" aria-labelledby="unconfirmed-comment-tab">
+                                {% if unconfirmed %}
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 10px;">#</th>
+                                            <th>نام و نام خانوادگی</th>
+                                            <th>نظر</th>
+                                            <th>رتبه</th>
+                                            <th style="width: 25px;">اکشن</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for unconfirmed_comment in unconfirmed %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}.</td>
+                                                <td>{{ unconfirmed_comment.name }}</td>
+                                                <td>{{ unconfirmed_comment.opinion }}</td>
+                                                <td>{{ unconfirmed_comment.rate }}</td>
+                                                <td style="display: flex; flex-direction: row; justify-content: space-between;">
+                                                    <form method="post" action="{% url 'comments:deletecomment' unconfirmed_comment.pk %}">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                            حذف
+                                                        </button>
+                                                    </form>
+                                                    <a href="{% url 'comments:confirmcomment' unconfirmed_comment.pk %}" class="btn btn-success btn-sm">
+                                                        تایید
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <div class="row">
+                                        <div class="col">
+                                            <h2 class="text-center">
+                                                خالی
+                                            </h2>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="tab-pane fade" id="confirmed-comment" role="tabpanel" aria-labelledby="confirmed-comment-tab">
+                                {% if confirmed %}
+                                    <table class="table table-striped">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 10px;">#</th>
+                                            <th>نام و نام خانوادگی</th>
+                                            <th>نظر</th>
+                                            <th>رتبه</th>
+                                            <th style="width: 25px;">اکشن</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for confirmed_comment in confirmed %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}.</td>
+                                                <td>{{ confirmed_comment.name }}</td>
+                                                <td>{{ confirmed_comment.opinion }}</td>
+                                                <td>{{ confirmed_comment.rate }}</td>
+                                                <td>
+                                                    <form method="post" action="{% url 'comments:deletecomment' confirmed_comment.pk %}">
+                                                        {% csrf_token %}
+                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                            حذف
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% else %}
+                                    <div class="row">
+                                        <div class="col">
+                                            <h2 class="text-center">
+                                                خالی
+                                            </h2>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock main %}
-{% block script %}
-    <!-- DataTables -->
-    <script src="{% static 'panel/plugins/datatables/jquery.dataTables.min.js' %}"></script>
-    <script src="{% static 'panel/plugins/datatables/dataTables.bootstrap.min.js' %}"></script>
-{% endblock script %}
